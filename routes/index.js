@@ -1,18 +1,9 @@
 var express = require('express');
 var router = express.Router();
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger-output.json');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.get('/users/:username', function(req, res) {
-  var username = req.params.username;
-  res.render('users/profile', { username: username});
-});
-
-router.get('', function(req, res) {
-  res.render('/users/form', )
-});
+router.use('/', swaggerUi.serve);
+router.get('/', swaggerUi.setup(swaggerDocument));
 
 module.exports = router;
