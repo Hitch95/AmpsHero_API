@@ -25,6 +25,8 @@ router.get('/', async (req, res) => {
 
 // POST /brands Créer une nouvelle marque
 router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    // #swagger.summary = 'Create a new brand'
+    // #swagger.description = 'Create a new brand with name and logo'
     if (req.user.role !== 'admin') {
         return res.status(402).json({ error: 'Unauthorized' });
     }
@@ -38,6 +40,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), async (req, r
 
 // GET /brands/1 Récupérer les données d'une marque
 router.get('/:id', async (req, res) => {
+    // #swagger.summary = 'Get one brand data'
+    // #swagger.description = 'Get one brand data'
     const brand = await Brand.findById(req.params.id);
     if (brand) {
         res.json(brand);
@@ -48,6 +52,8 @@ router.get('/:id', async (req, res) => {
 
 // PUT /brands/1 Mettre à jour une marque
 router.put('/:id', async (req, res) => {
+    // #swagger.summary = 'Update one brand'
+    // #swagger.description =  'Update one brand'
     const { name, logo } = req.body;
     let brand = await Brand.findById(req.params.id);
     brand.name = name;
@@ -62,6 +68,8 @@ router.put('/:id', async (req, res) => {
 
 // PATCH /brands/1 Mettre à jour une marque partiellement
 router.patch('/:id', async (req, res) => {
+    // #swagger.summary = 'Update partially one brand'
+    // #swagger.description = 'Update partially one brand'
     let brand = await Brand.findById(req.params.id);
     Object.assign(brand, req.body);
     try {
@@ -74,6 +82,8 @@ router.patch('/:id', async (req, res) => {
 
 // DELETE /brands/1 Supprimer une marque
 router.delete('/:id', async (req, res) => {
+    // #swagger.summary = 'Delete one brand'
+    // #swagger.description = 'Delete one brand'
     let brand = await Brand.findByIdAndDelete(req.params.id);
     if (brand) {
         res.status(204).json({ message: 'Brand successfully deleted!' });

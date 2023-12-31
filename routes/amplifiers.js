@@ -7,8 +7,8 @@ const router = express.Router();
 
 // GET /amplifiers Retourner la liste des amplis
 router.get('/', async (req, res) => {
-    // #swagger.summary = 'Get all amps'
-    // #swagger.description = 'Get all amps'
+    // #swagger.summary = 'Get all amplifiers'
+    // #swagger.description = 'Get all amplifiers'
     // #swagger.parameters['page'] = {description: 'Page number (default 0)', type: 'number'}
     // #swagger.parameters['limit'] = {description: 'Elements per page (default 2)', type: 'number'}
     // #swagger.parameters['brand'] = {description: 'Brand id', type: 'string'}
@@ -34,6 +34,8 @@ router.get('/', async (req, res) => {
 
 // POST /amplifiers Créer un nouvel ampli
 router.post('/', async (req, res) => {
+    // #swagger.summary = 'Create a new amplifier'
+    // #swagger.description = 'Create a new amplifier'
     try {
         const newAmplifier = new Amplifier(req.body);
         const savedAmplifier = await newAmplifier.save();
@@ -45,6 +47,8 @@ router.post('/', async (req, res) => {
 
 // GET /amplifiers/1 Récupérer les données d'un ampli
 router.get('/:id', async (req, res) => {
+    // #swagger.summary = 'Get one amplifier data'
+    // #swagger.description = 'Get one amplifier data'
     const amplifier = await Amplifier.findById(req.params.id).populate(['brand', 'presets', 'presets.user']);
 
     if (amplifier) {
@@ -56,6 +60,8 @@ router.get('/:id', async (req, res) => {
 
 // TODO: PATCH /amplifiers/1 Modifier les données d'un ampli
 router.patch('/:id', async (req, res) => {
+    // #swagger.summary = 'Update one amplifier data'
+    // #swagger.description = 'Update one amplifier data'
     try {
         const updateAmplifier = await Amplifier.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updateAmplifier) {
@@ -65,10 +71,12 @@ router.patch('/:id', async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-})
+});
 
 // TODO: DELETE /amplifiers/1 Supprimer les données d'un ampli (🗑️ en supprimer également ses presets)
 router.delete('/:id', async (req, res) => {
+    // #swagger.summary = 'Delete one amplifier'
+    // #swagger.description = 'Delete one amplifier with its presets'
     try {
         await Preset.deleteMany({ amp: req.params.id });
         const deletedAmplifier = await Amplifier.findByIdAndDelete(req.params.id);
@@ -78,6 +86,6 @@ router.delete('/:id', async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-})
+});
 
 module.exports = router;

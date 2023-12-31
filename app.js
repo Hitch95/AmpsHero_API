@@ -1,5 +1,5 @@
 var createError = require('http-errors');
-var express = require('express');
+let express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -8,14 +8,14 @@ const passportMiddleware = require("./middlewares/passport")();
 const User = require("./models/User");
 
 const authRouter = require('./routes/auth');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 const brandsRouter = require('./routes/brands');
 const amplifiersRouter = require('./routes/amplifiers');
 const presetsRouter = require('./routes/presets');
 const uploadsRouter = require('./routes/uploads');
 
-var app = express();
+let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

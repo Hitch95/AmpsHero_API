@@ -11,45 +11,32 @@
     "http"
   ],
   "paths": {
-    "/": {
+    "/users/": {
       "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/users/{username}": {
-      "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users",
+        "description": "Get all users with partial filter on username",
         "parameters": [
           {
             "name": "username",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "type": "string"
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/users/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a new user",
+        "description": "Create a new user",
         "parameters": [
           {
             "name": "body",
@@ -79,7 +66,11 @@
     },
     "/users/profile/{username}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "User Profile",
+        "description": "Display the profile page for a user, identified by their username.",
         "parameters": [
           {
             "name": "username",
@@ -97,7 +88,11 @@
     },
     "/users/create": {
       "get": {
-        "description": "",
+        "tags": [
+          "Users"
+        ],
+        "summary": "User Creation Form",
+        "description": "Render the form page for creating a new user account.",
         "responses": {
           "default": {
             "description": ""
@@ -105,9 +100,135 @@
         }
       }
     },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get one user data",
+        "description": "Get one user data with list of presets",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update one user",
+        "description": "Update one user (need to be authenticated or admin)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete one user",
+        "description": "Delete one user (need to be authenticated or admin)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/brands/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Get all brands",
+        "description": "Get all brands with name and logo",
+        "parameters": [
+          {
+            "name": "page",
+            "description": "Page number (default 0)",
+            "type": "number",
+            "in": "query"
+          },
+          {
+            "name": "limit",
+            "description": "Elements per page (default 2)",
+            "type": "number",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -115,20 +236,31 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Create a new brand",
+        "description": "Create a new brand with name and logo",
         "responses": {
           "201": {
             "description": "Created"
           },
           "400": {
             "description": "Bad Request"
+          },
+          "402": {
+            "description": "Payment Required"
           }
         }
       }
     },
     "/brands/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Get one brand data",
+        "description": "Get one brand data",
         "parameters": [
           {
             "name": "id",
@@ -147,7 +279,11 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Update one brand",
+        "description": "Update one brand",
         "parameters": [
           {
             "name": "id",
@@ -174,11 +310,18 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "patch": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Update partially one brand",
+        "description": "Update partially one brand",
         "parameters": [
           {
             "name": "id",
@@ -190,11 +333,18 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Brands"
+        ],
+        "summary": "Delete one brand",
+        "description": "Delete one brand",
         "parameters": [
           {
             "name": "id",
@@ -203,6 +353,314 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/amplifiers/": {
+      "get": {
+        "tags": [
+          "Amplifiers"
+        ],
+        "summary": "Get all amplifiers",
+        "description": "Get all amplifiers",
+        "parameters": [
+          {
+            "name": "page",
+            "description": "Page number (default 0)",
+            "type": "number",
+            "in": "query"
+          },
+          {
+            "name": "limit",
+            "description": "Elements per page (default 2)",
+            "type": "number",
+            "in": "query"
+          },
+          {
+            "name": "brand",
+            "description": "Brand id",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Amplifiers"
+        ],
+        "summary": "Create a new amplifier",
+        "description": "Create a new amplifier",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/amplifiers/{id}": {
+      "get": {
+        "tags": [
+          "Amplifiers"
+        ],
+        "summary": "Get one amplifier data",
+        "description": "Get one amplifier data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Amplifiers"
+        ],
+        "summary": "Update one amplifier data",
+        "description": "Update one amplifier data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Amplifiers"
+        ],
+        "summary": "Delete one amplifier",
+        "description": "Delete one amplifier with its presets",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/presets/presets": {
+      "get": {
+        "tags": [
+          "Presets"
+        ],
+        "summary": "Get all presets",
+        "description": "Retrieve a list of all presets, optionally filtering by amplifier and searching by music title. Includes user and amplifier data.",
+        "parameters": [
+          {
+            "name": "page",
+            "description": "Page number (default 0)",
+            "type": "number",
+            "in": "query"
+          },
+          {
+            "name": "limit",
+            "description": "Number of elements per page (default 2)",
+            "type": "number",
+            "in": "query"
+          },
+          {
+            "name": "ampli",
+            "description": "Filter by amplifier ID",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "musicTitle",
+            "description": "Partial search on music title",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/presets/": {
+      "post": {
+        "tags": [
+          "Presets"
+        ],
+        "summary": "Create a new preset",
+        "description": "Create a new preset (need to be authenticated)",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/presets(/presets/{id)}": {
+      "get": {
+        "tags": [
+          "Presets"
+        ],
+        "summary": "Get one preset data",
+        "description": "Get one preset data with user and amplifier data",
+        "parameters": [
+          {
+            "name": "id)",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/presets/{id}": {
+      "patch": {
+        "tags": [
+          "Presets"
+        ],
+        "summary": "Update one preset data",
+        "description": "Update one preset data (need to be authenticated or admin)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Presets"
+        ],
+        "summary": "Delete one preset",
+        "description": "Delete one preset (need to be authenticated or admin)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/uploads/": {
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Upload an image",
+        "description": "Upload an image",
         "responses": {
           "200": {
             "description": "OK"

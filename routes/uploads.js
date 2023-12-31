@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post('/', upload.single('file'), (req, res) => {
+    // #swagger.summary = 'Upload an image'
+    // #swagger.description = 'Upload an image'
     res.json({ file: req.file });
 });
 

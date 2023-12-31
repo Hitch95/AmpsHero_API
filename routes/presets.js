@@ -1,25 +1,44 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const Preset = require('../models/Preset');
 const { verifyAuthorization } = require('../middlewares/userVerify');
 
 
 // TODO: GET /presets Retourner la liste des configurations (🔗 avec les données de l'utilisateur et l'ampli ⚙️ filtre par ampli + recherche partielle sur titre de musique)
 router.get('/presets', async (req, res) => {
+    // #swagger.summary = 'Get all presets'
+    // #swagger.description = 'Retrieve a list of all presets, optionally filtering by amplifier and searching by music title. Includes user and amplifier data.'
+    // #swagger.parameters['page'] = { description: 'Page number (default 0)', type: 'number' }
+    // #swagger.parameters['limit'] = { description: 'Number of elements per page (default 2)', type: 'number' }
+    // #swagger.parameters['ampli'] = { description: 'Filter by amplifier ID', type: 'string' }
+    // #swagger.parameters['musicTitle'] = { description: 'Partial search on music title', type: 'string' }
     try {
-        let queryObj = {};
-        if (req.query.ampli) {
-            queryObj.amp = req.query.ampli;
+        let { page, limit, ampli, musicTitle } = req.query;
+        let filters = {};
+
+        page = isNaN(page) ? 1 : parseInt(page);
+        limit = isNaN(limit) ? 2 : parseInt(limit);
+
+        if (ampli) {
+            filters.amp = ampli;
         }
-        if (req.query.musicTitle) {
-            queryObj.musicTitle = { $regex: req.query.musicTitle, $options: 'i' };
+        if (musicTitle) {
+            filters.musicTitle = { $regex: musicTitle, $options: 'i' };
         }
 
-        const presets = await Preset.find(queryObj)
-            .populate('user', 'username') // Remplacez 'username' par les champs nécessaires de l'utilisateur
-            .populate('amp', 'name'); // Remplacez 'name' par les champs nécessaires de l'amplificateur
+        const presets = await Preset.find(filters)
+            .populate('user', 'username email') // Adaptez les champs selon vos besoins
+            .populate('amp', 'name brand') // Adaptez les champs selon vos besoins
+            .limit(limit)
+            .skip((page - 1) * limit);
 
-        res.json(presets);
+        const total = await Preset.where(filters).countDocuments();
+
+        res.json({
+            page,
+            "hydra:totalItems": total,
+            "hydra:members": presets
+        });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -28,6 +47,8 @@ router.get('/presets', async (req, res) => {
 
 // TODO: POST /presets Créer une nouvelle configuration (🔒 être connecté)
 router.post('/', verifyAuthorization(false), async (req, res) => {
+    // #swagger.summary = 'Create a new preset'
+    // #swagger.description = 'Create a new preset (need to be authenticated)'
     try {
         if (!req.user || !req.user._id) {
             return res.status(400).json({ 'error': 'User ID is required' });
@@ -48,6 +69,8 @@ router.post('/', verifyAuthorization(false), async (req, res) => {
 
 // TODO: GET /presets/1 Récupérer les données d'une configuration (🔗 avec les données de l'utilisateur et l'ampli)
 router.get(('/presets/:id'), async (req, res) => {
+    // #swagger.summary = 'Get one preset data'
+    // #swagger.description = 'Get one preset data with user and amplifier data'
     try {
         const preset = await Preset.findById(req.params.id)
             .populate('user', 'username')
@@ -59,10 +82,12 @@ router.get(('/presets/:id'), async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-})
+});
 
 // TODO: PATCH /presets/1 Modifier les données d'une configuration (🔒 être connecté avec son propre compte ou admin)
 router.patch('/:id', verifyAuthorization(false), async (req, res) => {
+    // #swagger.summary = 'Update one preset data'
+    // #swagger.description = 'Update one preset data (need to be authenticated or admin)'
     try {
         const preset = await Preset.findById(req.params.id);
 
@@ -82,10 +107,12 @@ router.patch('/:id', verifyAuthorization(false), async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
-})
+});
 
 // TODO: DELETE /presets/1 Supprimer les données d'une configuration (🔒 être connecté avec son propre compte ou admin)
 router.delete('/:id', verifyAuthorization(false), async (req, res) => {
+    // #swagger.summary = 'Delete one preset'
+    // #swagger.description = 'Delete one preset (need to be authenticated or admin)'
     try {
         const preset = await Preset.findById(req.params.id);
 
